@@ -1,0 +1,27 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "node_modules/": true,
+    ".vscode/": true,
+    "package-lock.json": true,
+    "truffle-config copy.js": true,
+  },
+  // 只能在本地窗口或远程窗口中设置
+  // "http.proxy": "http://127.0.0.1:7890",
+  // "http.proxyStrictSSL": false
+
+
+  "terminal.integrated.profiles.windows": {
+    "Bash": {
+      "path": "E:\\Git\\bin\\bash.exe",
+    }
+   },
+  "terminal.integrated.defaultProfile.windows": "Bash"
+  
+}
+
