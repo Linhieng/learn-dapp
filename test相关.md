@@ -1,3 +1,29 @@
+
+## 库
+
+测试用的库是 chai
+
+```js
+require('chai')
+  .use(require('chai-as-promised')) // 使用 promise 
+  .should()
+```
+
+## 相关解释
+
+* describe
+类似于分组的功能, 每一个 describe 里面可以再有一个 describe, 用来描述本组测试的信息
+
+* it
+测试内容, 第一个参数是该测试的描述, 第二个参数就是测试代码
+
+* should
+should 函数就是用来测试的, 是否通过测试就看 should 后面
+
+
+## 测试代码
+
+```js
 import { tokens, EVM_REVERT } from './helpers'
 
 const Token = artifacts.require('./Token')
@@ -171,3 +197,4 @@ contract('Token', ([deployer, receiver, exchange]) => {
   })
 
 })
+```
