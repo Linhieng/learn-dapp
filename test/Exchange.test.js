@@ -1,4 +1,4 @@
-import { tokens, EVM_REVERT } from './helpers'
+import { tokens, EVM_REVERT, ETHER_ADDRESS, ether } from './helpers'
 
 const Token = artifacts.require('./Token')
 const Exchange = artifacts.require('./Exchange')
@@ -33,12 +33,44 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
     })
   })
 
+  describe('fallback', () => {
+    it('reverts when Ether is send' ,async () => {
+      // 直接向交易所发钱, 测试交易所是否会拒绝并退钱. (应该是这样吧)
+      await exchange.sendTransaction({ value: ether(1), from: user1 }).should.be.rejectedWith(EVM_REVERT)
+    })
+  })
+
+  describe('depositing Ether', async () => {
+    let result
+    let amount
+
+    beforeEach(async () => {
+      amount = ether(1)
+      result = await exchange.depositEther({ from: user1, value: amount })
+    })
+
+    it('tracks the Ether deposit', async () => {
+      // 进行交易, user1 存储, 存到了 exchange 中. balance 是 user1 在交易所的余额
+      const balance = await exchange.tokens(ETHER_ADDRESS, user1)
+      balance.toString().should.equal(amount.toString())
+    })
+    it('emits a Deposit event', async () => {
+      const log = result.logs[0]
+      log.event.should.eq('Deposit')
+
+      const event  = log.args
+      event.token.should.equal(ETHER_ADDRESS, 'token address is correct')
+      event.user.should.equal(user1, 'user address is correct')
+      event.amount.toString().should.equal(amount.toString(), 'amount is correct')
+      event.balance.toString().should.equal(amount.toString(), 'balance is correct')
+    })
+  })
+
   describe('depositing tokens', () => {
     let amount
-    let result 
+    let result
 
     describe('success', async () => {
-
       beforeEach(async () => {
         amount = tokens(10)
         // approve token
@@ -46,7 +78,6 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
         // deposit token
         result = await exchange.depositToken(token.address, amount, { from: user1 })
       })
-
       it('tracks the token deposit', async () => {
         // Check exchange token balance
         let balance
@@ -71,6 +102,11 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
     })
 
     describe('failure', () => {
+      it('rejects Ether deposit', async () => {
+        // 这里的地址是 ETHER, sol 中的 require(_token != ETHER) 将会断言为假
+        await exchange.depositToken(ETHER_ADDRESS, tokens(10), { from: user1 })
+          .should.be.rejectedWith(EVM_REVERT)
+      })
       it('fails when no tokens are approved', async () => {
         // Don't approve any tokens before depositing 尝试在没有获取批准的情况存入代币,这将会导致一个错误
         await exchange.depositToken(token.address, tokens(10), { from: user1 })

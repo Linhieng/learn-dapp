@@ -5,21 +5,51 @@
 
 ```js
 require('chai')
-  .use(require('chai-as-promised')) // 使用 promise 
+  .use(require('chai-as-promised')) // 使用 promise
   .should()
 ```
 
 ## 相关解释
 
 * describe
-类似于分组的功能, 每一个 describe 里面可以再有一个 describe, 用来描述本组测试的信息
+类似于分组的功能, 每一个 describe 里面可以再有一个 describe, 用来描述本组测试的信息.
+describe('failure') 该组中就是测试一些错误请求, 然后期待我们的合约能够判断出这是错误的.
+describe('success') 则相反.
+
+sol 中的 require() 部分, 是断言.
+describe('failure') 就是用来测试这些 require 是否断言成功的
 
 * it
-测试内容, 第一个参数是该测试的描述, 第二个参数就是测试代码
+测试, 第一个参数是该测试的描述, 第二个参数就是测试代码
 
 * should
 should 函数就是用来测试的, 是否通过测试就看 should 后面
 
+* should.be.rejectedWith(EVM_REVERT)
+我们模拟了一个错误的请求方式, 然后期待我们的合约能够判断出这是错误的, 并且报错的类型与我们制定的一致(EVM_REVERT)
+
+比如: AssertionError: expected promise to be rejected with an error including 'VM Exception while processing transaction: revert' but got 'invalid address...
+这个报错就说明了我们的测试不成功, 我们期待程序检测出的错误是 `VM Exception while processing transaction: revert`,
+但是程序给我们检测出的错误却是: invalid address 无效的地址
+
+再如: AssertionError: expected promise to be rejected with an error including 'VM Exception while processing transaction: revert' but it was fulfilled with
+报错已经说得很明白了, 我们期待程序发现错误, 结果他却让他直接成功通过了
+
+
+* contract('Exchange', ([deployer, feeAccount, user1]) => {})
+这一个应该是部署合约,
+
+* ✓ Transaction submitted successfully. Hash: 0x...
+这一个是成功的交易, 部署合约时会有 4 条交易记录, 每次 `truffle test` 的时候,
+我们会发现在开始测试之前, 总会有 4 条交易, 这个就是用来部署合约的津贴吧.
+
+* function metadata 函数元数据
+在测试中, 可以看到很多函数都有一个对象参数, 比如
+token.transfer(user1, tokens(100), { from: deployer }),
+transfer 函数声明格式是这样的 transfer (address _to, uint256 _value)
+可以看到, 并没有第三个参数用来接收 { from: deployer }
+其实 { from: deployer } 这样的, 就是 function metadata,
+并不需要在函数中声明
 
 ## 测试代码
 

@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 contract Token {
   using SafeMath for uint;
 
-  // Variables  
+  // Variables
   string public name = "DAPP Token";
   string public symbol = "DAPP";
   uint256 public decimals = 18;
@@ -46,8 +46,8 @@ contract Token {
   }
 
   function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
-    require(_value <= balanceOf[_from]); 
-    require(_value <= allowance[_from][msg.sender]); 
+    require(_value <= balanceOf[_from]);
+    require(_value <= allowance[_from][msg.sender]);
     allowance[_from][msg.sender] = allowance[_from][msg.sender].sub(_value);
     _transfer(_from, _to, _value);
     return true;
