@@ -16,8 +16,8 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 // [X] Check balances
 // [X] Make order
 // [X] Cancel order
-// [ ] Fill order
-// [ ] Charge fees
+// [X] Fill order
+// [X] Charge fees
 
 contract Exchange {
   using SafeMath for uint;
@@ -30,6 +30,7 @@ contract Exchange {
   mapping(uint256 => _Order) public orders; // a way store the order
   uint public orderCount;
   mapping(uint256 => bool) public orderCancelled;  // 注意取消订单的逻辑: 是新建一个 “已取消的订单” 映射, 而不是在订单中删除对应的订单
+  mapping(uint256 => bool) public orderFilled;  // 完成了的订单将会被标志
 
   // Event
   event Deposit(address token, address user, uint256 amount, uint256 balance);
@@ -50,6 +51,16 @@ contract Exchange {
     uint256 amountGet,
     address tokenGive,
     uint256 amountGive,
+    uint256 timestamp
+  );
+  event Trade (
+    uint256 id,
+    address user,
+    address tokenGet,
+    uint256 amountGet,
+    address tokenGive,
+    uint256 amountGive,
+    address userFill,
     uint256 timestamp
   );
 
@@ -127,5 +138,34 @@ contract Exchange {
     emit Cancel(_order.id, msg.sender, _order.tokenGet, _order.amountGet, _order.tokenGive, _order.amountGive, _order.timestamp);
   }
 
+  function fillOrder(uint256 _id) public {
+    require(_id > 0 && _id <= orderCount); // make sure this order id is valid
+    require(!orderFilled[_id]);
+    require(!orderCancelled[_id]);
+    // Fetch the Order 获取订单
+    _Order storage _order = orders[_id];
+    // 执行订单相关操作
+    _trade(_order.id, _order.user, _order.tokenGet, _order.amountGet, _order.tokenGive, _order.amountGive);
+    // Mark order as filled. 标记为 filled
+    orderFilled[_order.id] = true;
+  }
+
+  function _trade(uint256 _id, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) internal {
+    // msg.sender 是填写订单(fill)的人, _user 是创建订单(make)的人 (?)
+    // Charge fees
+    // Fee paid by the user that fills the order. 小费由填写订单(fill)的人支付
+    // Fee deducted from _amountGet
+    uint256 _feeAmount = _amountGive.mul(feePercent).div(100);
+
+    // Execute tarde. 这里执行的交易, 就是余额互换(再加上小费). 发送者要发送多少, 我们就要将他们的余额减去多少
+    tokens[_tokenGet][msg.sender] = tokens[_tokenGet][msg.sender].sub(_amountGet.add(_feeAmount));
+    tokens[_tokenGet][_user] = tokens[_tokenGet][_user].add(_amountGet);
+    tokens[_tokenGet][feeAccount] = tokens[_tokenGet][feeAccount].add(_feeAmount); // 将小费送到 feeAccount
+    tokens[_tokenGive][_user] = tokens[_tokenGive][_user].sub(_amountGive); // get 增, give 减
+    tokens[_tokenGive][msg.sender] = tokens[_tokenGive][msg.sender].add(_amountGive);
+
+    // Emit trade event
+    emit Trade(_id, _user, _tokenGet, _amountGet, _tokenGive, _amountGive, msg.sender, now);
+  }
 
 }

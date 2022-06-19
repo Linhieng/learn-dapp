@@ -28,7 +28,12 @@ sol 中的 require() 部分, 是断言.
 describe('failure') 就是用来测试这些 require 是否断言成功的
 
 * it
-测试, 第一个参数是该测试的描述, 第二个参数就是测试代码
+测试, 第一个参数是该测试的描述, 第二个参数就是测试代码.
+每一个 it 都是相互独立的, 每一个都是全新的开始.
+
+* beforeEach
+在一个分组 describe 中有多个 it, 每一个 it 都有执行的语句可以抽离到 beforeEach 中.
+即 beforeEach 中的语句, 会在每一个 it 中执行
 
 * should
 should 函数就是用来测试的, 是否通过测试就看 should 后面
