@@ -33,7 +33,7 @@ module.exports = async function(callback) {
     const exchange = await Exchange.deployed()
     console.log('Exchange fetched', exchange.address)
 
-    console.log('///// 交易 //////////////////////////////////////////////')
+    console.log('//////////////////////////////////////////////////////////////////')
 
     // Give tokens to account[1]
     const sender = accounts[0]
@@ -45,7 +45,7 @@ module.exports = async function(callback) {
     console.log(`交易: sender 转账(tokens) 给 receiver`)
     console.log(`Transferred ${amount} tokens from ${sender} to ${receiver}`)
 
-    console.log('//// 批准代币和存储代币 ////////////////////////////////////////////////////')
+    console.log('//////////////////////////////////////////////////////////////////')
     // Set up exchange users
     const user1 = accounts[0]
     const user2 = accounts[1]
@@ -70,7 +70,6 @@ module.exports = async function(callback) {
     //////////////////////////////////////////////////////////////
     // Seed a Cancelled Order
     //
-    console.log('/////// Seed a Cancelled Order //////////////////////////////////////////////////')
 
     // User1 makes order to get tokens
     let result
@@ -79,7 +78,6 @@ module.exports = async function(callback) {
     console.log('user1 制作(发起)了一个账单, 其中 token 100, ether 0.1')
     console.log(`Make order from ${user1}`)
 
-    // console.log(result)
     orderId = result.logs[0].args.id
     await exchange.cancelOrder(orderId, { from: user1 })
     console.log('user1 取消了一个账单(刚刚才制作的)')

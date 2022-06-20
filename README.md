@@ -23,7 +23,6 @@ truffle migrate --reset
 此命令会消耗 wei
 
 
-
 truffle 控制台交互
 ```bash
 $ truffle console
