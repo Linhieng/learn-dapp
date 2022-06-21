@@ -22,6 +22,6 @@
     }
    },
   "terminal.integrated.defaultProfile.windows": "Bash",
-
+   "files.autoSave": "off"
 }
 
