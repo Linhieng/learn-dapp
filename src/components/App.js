@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import Web3 from 'web3'
+import Token from '../abis/Token.json'
 
 class App extends Component {
   componentWillMount() {
@@ -9,11 +10,19 @@ class App extends Component {
 
   async loadBlockchainData() {
     const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545")
+    console.log('web3 对象', web3)
+
     const network_type = await web3.eth.net.getNetworkType()
+    console.log('账户类型', network_type)
+
     const account = await web3.eth.getAccounts()
-    console.log(network_type)
-    console.log(web3)
-    console.log(account)
+    console.log('获取所有账户', account)
+
+    const abis = Token.abi
+    console.log('abis: ', abis)
+
+    const networks = Token.networks
+    console.log('networks', networks)
   }
 
   render() {
