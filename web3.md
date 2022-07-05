@@ -29,11 +29,20 @@ getAccounts, 获取所有账户
 ```js
 web3.eth.getAccounts([callback])
 
+window.ethereum && (await window.ethereum.request({ method: 'eth_requestAccounts' }))
 const account = await web3.eth.getAccounts()
 ```
-在开了 metamask 插件的浏览器中没有输出账号, 在没有使用 metamask 插件的浏览器中可以输出 ganache 中的账号
-也就是说 new Web3(Web3.givenProvider) 输出不了账号
-而 new Web3("ws://localhost:7545") 可以输出账号
+注意: 默认情况下 new Web3(Web3.givenProvider) 会输出 0 个账户
+这是因为 metamask 插件改版了
+新版的 metamask 插件默认情况下是开启了隐私模式的
+所以想要获取账户时需要手动关闭隐私模式
+可以通过判断 `window.ethereum` 的有无来判断 metamask 版本是否是新版本
+通过 `await ethereum.enable()` 可以手动关闭隐私模式（允许该网站连接账户）
+不过 `await ethereum.enable()` 现在已经被弃用了，未来可能被删除
+[官方文档](https://docs.metamask.io/guide/ethereum-provider.html#ethereum-enable-deprecated)
+可以使用 `ethereum.request({ method: 'eth_requestAccounts' })` 代替
+
+
 
 ###
 获取网络 id, ganache 中默认的是 1337 我们可以自己设置 ganache 中的网络id

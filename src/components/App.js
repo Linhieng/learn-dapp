@@ -9,7 +9,7 @@ class App extends Component {
   }
 
   async loadBlockchainData() {
-    const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545")
+    const web3 = new Web3(Web3.givenProvider || 'ws://localhost:7545')
     console.log('web3 对象', web3)
 
     const network_type = await web3.eth.net.getNetworkType()
@@ -18,6 +18,8 @@ class App extends Component {
     const network_id = await web3.eth.net.getId()
     console.log('网络id', network_id)
 
+    window.ethereum &&
+      (await window.ethereum.request({ method: 'eth_requestAccounts' }))
     const account = await web3.eth.getAccounts()
     console.log('获取所有账户', account)
 
@@ -38,42 +40,67 @@ class App extends Component {
 
     const totalSupply = await token.methods.totalSupply().call()
     console.log('totalSupply ', totalSupply)
-
   }
 
   render() {
     return (
       <div>
-
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-          <a href="/#" className="navbar-brand">Navbar</a>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" > {/* 这里少了点 prop */}
+          <a href="/#" className="navbar-brand">
+            Navbar
+          </a>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNavDropdown"
+          >
+            {' '}
+            {/* 这里少了点 prop */}
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
-              <li className="nav-item"> <a href="/#" className="nav-link">Link 1</a> </li>
-              <li className="nav-item"> <a href="/#" className="nav-link">Link 2</a> </li>
-              <li className="nav-item"> <a href="/#" className="nav-link">Link 3</a> </li>
+              <li className="nav-item">
+                {' '}
+                <a href="/#" className="nav-link">
+                  Link 1
+                </a>{' '}
+              </li>
+              <li className="nav-item">
+                {' '}
+                <a href="/#" className="nav-link">
+                  Link 2
+                </a>{' '}
+              </li>
+              <li className="nav-item">
+                {' '}
+                <a href="/#" className="nav-link">
+                  Link 3
+                </a>{' '}
+              </li>
             </ul>
           </div>
         </nav>
 
         <div className="content">
-
           <div className="vertical-split">
             <div className="card bg-dark text-white">
               <div className="card-header">Card Title</div>
               <div className="card-body">
                 <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">Card link</a>
+                <a href="/#" className="card-link">
+                  Card link
+                </a>
               </div>
             </div>
             <div className="card bg-dark text-white">
               <div className="card-header">Card Title</div>
               <div className="card-body">
                 <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">Card link</a>
+                <a href="/#" className="card-link">
+                  Card link
+                </a>
               </div>
             </div>
           </div>
@@ -83,7 +110,9 @@ class App extends Component {
               <div className="card-header">Card Title</div>
               <div className="card-body">
                 <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">Card link</a>
+                <a href="/#" className="card-link">
+                  Card link
+                </a>
               </div>
             </div>
           </div>
@@ -93,14 +122,18 @@ class App extends Component {
               <div className="card-header">Card Title</div>
               <div className="card-body">
                 <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">Card link</a>
+                <a href="/#" className="card-link">
+                  Card link
+                </a>
               </div>
             </div>
             <div className="card bg-dark text-white">
               <div className="card-header">Card Title</div>
               <div className="card-body">
                 <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">Card link</a>
+                <a href="/#" className="card-link">
+                  Card link
+                </a>
               </div>
             </div>
           </div>
@@ -110,13 +143,13 @@ class App extends Component {
               <div className="card-header">Card Title</div>
               <div className="card-body">
                 <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">Card link</a>
+                <a href="/#" className="card-link">
+                  Card link
+                </a>
               </div>
             </div>
           </div>
-
         </div>
-
       </div>
     )
   }
