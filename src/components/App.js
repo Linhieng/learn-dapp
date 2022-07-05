@@ -15,6 +15,9 @@ class App extends Component {
     const network_type = await web3.eth.net.getNetworkType()
     console.log('账户类型', network_type)
 
+    const network_id = await web3.eth.net.getId()
+    console.log('网络id', network_id)
+
     const account = await web3.eth.getAccounts()
     console.log('获取所有账户', account)
 
@@ -23,6 +26,19 @@ class App extends Component {
 
     const networks = Token.networks
     console.log('networks', networks)
+
+    const network_data = Token.networks[network_id]
+    console.log('network_data', network_data)
+
+    const network_address = network_data.address
+    console.log('network_address: ', network_address)
+
+    const token = new web3.eth.Contract(Token.abi, network_address)
+    console.log('token', token)
+
+    const totalSupply = await token.methods.totalSupply().call()
+    console.log('totalSupply ', totalSupply)
+
   }
 
   render() {
