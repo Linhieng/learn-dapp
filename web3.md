@@ -79,7 +79,16 @@ console.log('totalSupply ', totalSupply)
 注意，如果调用该方法时出错，可能是因为没有编译智能合约，或者因为 ganache 更新了
 重新执行一下 `truffle migrate --reset` 就可以了
 
+### getPastEvents
+获取历史事件, 每次智能合约执行时, 都会有一个事件产生, 通过这个 api 可以获取所有事件。
+这些事件，可以构成我们的历史交易、历史订单
+[文档](https://web3js.readthedocs.io/en/v1.7.3/web3-eth-contract.html?highlight=getPastEvents#getpastevents)
 
+```js
+myContract.getPastEvents(event[, options][, callback])
+
+await exchange.getPastEvents('Cancel', { fromBlock: 0, toBlock: 'latest', })
+```
 
 ## abis
 
