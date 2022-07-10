@@ -122,7 +122,89 @@ export const orderBookSelector = createSelector(openOrders, (orders) => {
   return orders
 })
 
+// 我的已完成订单
+export const myFilledOrderLoadedSelector = createSelector(
+  filledOrdersLoaded,
+  (loaded) => loaded
+)
+export const myFilledOrderSelector = createSelector(
+  account,
+  filledOrders,
+  (account, filledOrders) => {
+    // Filter our orders 取出属于 “我的”
+    console.log('获取我的账户', account)
+    filledOrders = filledOrders.filter(
+      (o) => o.user === account || o.userFill === account
+    )
+    // Sort orders by date descending
+    filledOrders = filledOrders.sort((a, b) => b.timestamp - a.timestamp)
+    // Decorate orders - add display attributes
+    filledOrders = decorateMyFilledOrders(filledOrders, filledOrders)
+    return filledOrders
+  }
+)
+
+// 我的订单簿
+export const myOpenOrdersLoadedSelector = createSelector(
+  orderBookLoaded,
+  (loaded) => loaded
+)
+export const myOpenOrdersSelector = createSelector(
+  account,
+  openOrders,
+  (account, orders) => {
+    // Filter orders created by current account 取出属于 “我的”
+    orders = orders.filter((o) => o.user === account)
+    // Decorate orders - add display attributes
+    orders = decorateMyOpenOrders(orders, account)
+    // Sort orders by date descending
+    orders = orders.sort((a, b) => b.timestamp - a.timestamp)
+    return orders
+  }
+)
+
 /* *****************工具函数***************** */
+
+const decorateMyOpenOrder = (order, account) => {
+  const orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
+  const orderTypeClass = orderType === 'buy' ? GREEN : RED
+  return {
+    ...order,
+    orderType,
+    orderTypeClass,
+  }
+}
+
+const decorateMyOpenOrders = (orders, account) =>
+  orders.map((order) => {
+    order = decorateOrder(order)
+    order = decorateMyOpenOrder(order, account)
+    return order
+  })
+
+const decorateMyFilledOrder = (order, account) => {
+  let orderType
+  //
+  if (order.user === account) {
+    orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
+  } else {
+    orderType = order.tokenGive === ETHER_ADDRESS ? 'sell' : 'buy'
+  }
+
+  return {
+    ...order,
+    orderType,
+    orderTypeClass: orderType === 'buy' ? GREEN : RED,
+    orderSign: orderType === 'buy' ? '+' : '-',
+  }
+}
+
+const decorateMyFilledOrders = (orders, account) =>
+  orders.map((order) => {
+    order = decorateOrder(order)
+    order = decorateMyFilledOrder(order, account)
+    return order
+  })
 
 // 对 order book 订单按照类型 buy 和 sell 进行分类
 const groupByOrderBookORders = (orders) => {
@@ -155,7 +237,7 @@ const decorateOrderBookOrder = (order) => {
   const orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
   // 如果订单是买入, 则显示为绿色, 卖出则显示为红色
   const orderTypeClass = orderType === 'buy' ? GREEN : RED
-  //
+  // 好像没用到...
   const orderFillClass = orderType === 'bug' ? 'sell' : 'buy'
   return {
     ...order,
