@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { exchangeSelector } from '../store/selectors'
 import { loadAllOrders } from '../store/interactions'
 
+import Trades from './Trades'
+
 class Content extends Component {
   componentWillMount() {
     this.loadBlockchainData(this.props.dispatch)
@@ -70,15 +72,7 @@ class Content extends Component {
         </div>
 
         <div className="vertical">
-          <div className="card bg-dark text-white">
-            <div className="card-header">Card Title</div>
-            <div className="card-body">
-              <p className="card-text">Some quick example text</p>
-              <a href="/#" className="card-link">
-                Card link
-              </a>
-            </div>
-          </div>
+          <Trades />
         </div>
       </div>
     )
