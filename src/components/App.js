@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 import './App.css'
+
 import Navbar from './Navbar'
+import Content from './Content'
+
+import { contractsLoadedSelector } from '../store/selectors'
+
 import { connect } from 'react-redux'
 import {
   loadWeb3,
@@ -41,80 +46,14 @@ class App extends Component {
     return (
       <div>
         <Navbar />
-
-        <div className="content">
-          <div className="vertical-split">
-            <div className="card bg-dark text-white">
-              <div className="card-header">Card Title</div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">
-                  Card link
-                </a>
-              </div>
-            </div>
-            <div className="card bg-dark text-white">
-              <div className="card-header">Card Title</div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">
-                  Card link
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="vertical">
-            <div className="card bg-dark text-white">
-              <div className="card-header">Card Title</div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">
-                  Card link
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="vertical-split">
-            <div className="card bg-dark text-white">
-              <div className="card-header">Card Title</div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">
-                  Card link
-                </a>
-              </div>
-            </div>
-            <div className="card bg-dark text-white">
-              <div className="card-header">Card Title</div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">
-                  Card link
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="vertical">
-            <div className="card bg-dark text-white">
-              <div className="card-header">Card Title</div>
-              <div className="card-body">
-                <p className="card-text">Some quick example text</p>
-                <a href="/#" className="card-link">
-                  Card link
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Content />
       </div>
     )
   }
 }
 
 function mapStateToProps(state) {
+  console.log('???', contractsLoadedSelector(state))
   return {
     // TODO: Fill me in ...
   }
