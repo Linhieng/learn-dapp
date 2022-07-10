@@ -1,4 +1,4 @@
-import { groupBy, reject, get } from 'lodash'
+import { groupBy, reject, get, maxBy, minBy } from 'lodash'
 import moment from 'moment'
 import { createSelector } from 'reselect'
 import { ETHER_ADDRESS, ether, tokens, RED, GREEN } from '../helpers'
@@ -162,7 +162,65 @@ export const myOpenOrdersSelector = createSelector(
   }
 )
 
+export const priceChartLoadedSelector = createSelector(
+  filledOrdersLoaded,
+  (loaded) => loaded
+)
+export const priceChartSelector = createSelector(filledOrders, (orders) => {
+  // Sort orders by date ascending to compare history
+  orders = orders.sort((a, b) => a.timestamp - b.timestamp)
+  // Decorate orders - add display attributes
+  orders = orders.map((o) => decorateOrder(o))
+
+  // Get last 2 order for final price & price change
+  let secondLastOrder, lastOrder
+  ;[secondLastOrder, lastOrder] = orders.slice(orders.length - 2, orders.length)
+  // get last order price
+  const lastPrice = get(lastOrder, 'tokenPrice', 0)
+  // get second last order price
+  const secondLastPrice = get(secondLastOrder, 'tokenPrice', 0)
+  const lastPriceChange = lastPrice >= secondLastPrice ? '+' : '-'
+  const series = [{ data: buildGraphData(orders) }]
+
+  return {
+    lastPrice,
+    lastPriceChange,
+    series,
+  }
+})
+
 /* *****************工具函数***************** */
+/* *****************工具函数***************** */
+/* *****************工具函数***************** */
+
+const buildGraphData = (orders) => {
+  // Group the orders by hour for the graph
+  orders = groupBy(orders, (o) =>
+    moment
+      .unix(o.timestamp)
+      .startOf('hour')
+      .format()
+  )
+  // Get each hour where data exists
+  const hours = Object.keys(orders)
+  // Build the graph series
+  const graphData = hours.map((hour) => {
+    // Fetch all the orders from current hour
+    const group = orders[hour]
+    // Calculate price values - open, high, low, close
+    const open = group[0]
+    const high = maxBy(group, 'tokenPrice')
+    const low = minBy(group, 'tokenPrice')
+    const close = group[group.length - 1]
+
+    return {
+      x: new Date(hour),
+      y: [open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice],
+    }
+  })
+
+  return graphData
+}
 
 const decorateMyOpenOrder = (order, account) => {
   const orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
