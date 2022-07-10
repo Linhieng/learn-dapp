@@ -33,11 +33,21 @@ class App extends Component {
 
     const networkId = await web3.eth.net.getId()
     console.log('网络id', networkId)
-    const token = loadToken(web3, networkId, dispatch)
-    console.log('token', token)
 
-    const exchange = loadExchange(web3, networkId, dispatch)
-    console.log('exchange', exchange)
+    const token = await loadToken(web3, networkId, dispatch)
+    if (!token) {
+      window.alert(
+        'Token smart contract not detected on the current network. Please select another network with MEtamask. 该网络中不存在 token, 请在 metamask 中切换网络'
+      )
+    }
+
+    const exchange = await loadExchange(web3, networkId, dispatch)
+    if (!exchange) {
+      window.alert(
+        'Exchange smart contract not detected on the current network. Please select another network with MEtamask. 该网络中不存在 Exchange, 请在 metamask 中切换网络'
+      )
+    }
+
     // const totalSupply = await token.methods.totalSupply().call()
     // console.log('totalSupply ', totalSupply)
   }
@@ -46,16 +56,20 @@ class App extends Component {
     return (
       <div>
         <Navbar />
-        <Content />
+        {/* 动态加载 */}
+        {this.props.contractsLoaded ? (
+          <Content />
+        ) : (
+          <div className="content"></div>
+        )}
       </div>
     )
   }
 }
 
 function mapStateToProps(state) {
-  console.log('???', contractsLoadedSelector(state))
   return {
-    // TODO: Fill me in ...
+    contractsLoaded: contractsLoadedSelector(state),
   }
 }
 
