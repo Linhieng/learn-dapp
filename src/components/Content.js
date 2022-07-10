@@ -4,6 +4,7 @@ import { exchangeSelector } from '../store/selectors'
 import { loadAllOrders } from '../store/interactions'
 
 import Trades from './Trades'
+import OrderBook from './OrderBook'
 
 class Content extends Component {
   componentWillMount() {
@@ -38,17 +39,7 @@ class Content extends Component {
           </div>
         </div>
 
-        <div className="vertical">
-          <div className="card bg-dark text-white">
-            <div className="card-header">Card Title</div>
-            <div className="card-body">
-              <p className="card-text">Some quick example text</p>
-              <a href="/#" className="card-link">
-                Card link
-              </a>
-            </div>
-          </div>
-        </div>
+        <OrderBook />
 
         <div className="vertical-split">
           <div className="card bg-dark text-white">

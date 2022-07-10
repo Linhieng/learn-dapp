@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import { groupBy, reject, get } from 'lodash'
 import moment from 'moment'
 import { createSelector } from 'reselect'
 import { ETHER_ADDRESS, ether, tokens, RED, GREEN } from '../helpers'
@@ -33,13 +33,13 @@ export const contractsLoadedSelector = createSelector(
   (tokenLoaded, exchangeLoaded) => tokenLoaded && exchangeLoaded
 )
 
+// 用于判断完成的订单是否加载完毕
 const filledOrdersLoaded = (state) =>
   get(state, 'exchange.filledOrders.loaded', false)
 export const filledOrdersLoadedSelector = createSelector(
   filledOrdersLoaded,
   (loaded) => loaded
 )
-
 // 获取完成的订单
 const filledOrders = (state) => get(state, 'exchange.filledOrders.data', [])
 export const filledOrdersSelector = createSelector(filledOrders, (orders) => {
@@ -47,12 +47,123 @@ export const filledOrdersSelector = createSelector(filledOrders, (orders) => {
   orders = orders.sort((a, b) => a.timestamp - b.timestamp)
   // decorate order 为该订单添加一些信息, 比如给出时间、是卖出还是买入、金额多少...
   orders = decorateFilledOrders(orders)
-
-  console.log(orders)
   // Sort orders by date descending for display 按照时间逆序排队 —— 晚在前
   orders = orders.sort((a, b) => b.timestamp - a.timestamp)
   return orders
 })
+
+// cancelled orders
+const cancelledOrdersLoaded = (state) =>
+  get(state, 'exchange.cancelledOrders.loaded', false)
+export const cancelledOrdersLoadedSelector = createSelector(
+  cancelledOrdersLoaded,
+  (cancelledOrdersLoaded) => cancelledOrdersLoaded
+)
+const cancelledOrders = (state) =>
+  get(state, 'exchange.cancelledOrders.data', [])
+export const cancelledOrdersSelector = createSelector(
+  cancelledOrders,
+  (cancelledOrders) => cancelledOrders
+)
+
+// all orders
+const allOrdersLoaded = (state) =>
+  get(state, 'exchange.allOrders.loaded', false)
+export const allOrdersLoadedSelector = createSelector(
+  allOrdersLoaded,
+  (allOrdersLoaded) => allOrdersLoaded
+)
+const allOrders = (state) => get(state, 'exchange.allOrders.data', [])
+export const allOrdersSelector = createSelector(
+  allOrders,
+  (allOrders) => allOrders
+)
+
+// all filled cancel 订单都加载完毕时，代表 order book (订单簿) 也加载完毕了
+const orderBookLoaded = (state) =>
+  cancelledOrdersLoaded(state) &&
+  filledOrdersLoaded(state) &&
+  allOrdersLoaded(state)
+export const orderBookLoadedSelector = createSelector(
+  orderBookLoaded,
+  (orderBookLoaded) => orderBookLoaded
+)
+// 也可以简写成这样：
+// export const orderBookLoadedSelector = createSelector(
+//   cancelledOrdersLoaded,
+//   filledOrdersLoaded,
+//   allOrdersLoaded,
+//   (c, f, a) => c && f && a
+// )
+
+// 获取正在交易中的订单
+const openOrders = (state) => {
+  // 获取 全部订单、已完成订单、已取消订单。
+  const all = allOrders(state)
+  const filled = filledOrders(state)
+  const cancelled = cancelledOrders(state)
+
+  // 在全部订单中取出已完成订单和已取消订单，剩下的就是 open 订单. reject: 取出返回 false 的元素
+  const openOrders = reject(all, (order) => {
+    const orderFilled = filled.some((o) => o.id === order.id)
+    const orderCancelled = cancelled.some((o) => o.id === order.id)
+    // 返回 true 则代表该订单是 filled 或者 cancel 的, 这种订单我们不要
+    return orderFilled || orderCancelled
+  })
+
+  return openOrders
+}
+// 获取展示在 order Book 的订单 (order book: 交易未完成的订单)
+export const orderBookSelector = createSelector(openOrders, (orders) => {
+  // Decorate orders
+  orders = decorateOrderBookOrders(orders)
+  orders = groupByOrderBookORders(orders)
+
+  return orders
+})
+
+/* *****************工具函数***************** */
+
+// 对 order book 订单按照类型 buy 和 sell 进行分类
+const groupByOrderBookORders = (orders) => {
+  // Group orders by 'orderType' 对 order book 进行分组啊, 分为买入订单和卖出订单
+  orders = groupBy(orders, 'orderType')
+  // Fetch buy orders. 获取 buy 类型的订单, 在 order.buy 中
+  let buyOrders = get(orders, 'buy', [])
+  let sellOrders = get(orders, 'sell', [])
+  // Sort buy orders by token price. 按照价格降序排序
+  buyOrders = buyOrders.sort((a, b) => b.tokenPrice - a.tokenPrice)
+  sellOrders = sellOrders.sort((a, b) => b.tokenPrice - a.tokenPrice)
+  return {
+    ...orders,
+    buyOrders,
+    sellOrders,
+  }
+}
+// 注意有是该函数名是复数
+const decorateOrderBookOrders = (orders) =>
+  orders.map((order) => {
+    // 增加基本的信息
+    order = decorateOrder(order)
+    // decorate order book order 添加属于 order book 订单的信息
+    order = decorateOrderBookOrder(order)
+    return order
+  })
+// 添加属于 order book 的信息
+const decorateOrderBookOrder = (order) => {
+  // 判断该订单是买入还是卖出
+  const orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
+  // 如果订单是买入, 则显示为绿色, 卖出则显示为红色
+  const orderTypeClass = orderType === 'buy' ? GREEN : RED
+  //
+  const orderFillClass = orderType === 'bug' ? 'sell' : 'buy'
+  return {
+    ...order,
+    orderType,
+    orderTypeClass,
+    orderFillClass,
+  }
+}
 
 // 专门为所有已完成的订单添加信息(主要该函数名称是复数的)
 const decorateFilledOrders = (orders) => {

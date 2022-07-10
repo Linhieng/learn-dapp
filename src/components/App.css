@@ -147,3 +147,17 @@ td.cancel-order {
 td.order-book-order {
   cursor: pointer;
 }
+
+/* =========== */
+
+.card-body {
+  overflow: auto;
+}
+.card-body::-webkit-scrollbar {
+  width: 1px;
+  background-color: #ffffff26;
+}
+.card-body::-webkit-scrollbar-thumb {
+  width: 1px;
+  background-color: #ffffff33;
+}
