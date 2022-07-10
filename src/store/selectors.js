@@ -132,7 +132,6 @@ export const myFilledOrderSelector = createSelector(
   filledOrders,
   (account, filledOrders) => {
     // Filter our orders 取出属于 “我的”
-    console.log('获取我的账户', account)
     filledOrders = filledOrders.filter(
       (o) => o.user === account || o.userFill === account
     )
