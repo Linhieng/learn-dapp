@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import './App.css'
+import Navbar from './Navbar'
 import { connect } from 'react-redux'
 import {
   loadWeb3,
@@ -7,8 +8,6 @@ import {
   loadToken,
   loadExchange,
 } from '../store/interactions'
-
-import { accountSelector } from '../store/selectors'
 
 class App extends Component {
   componentWillMount() {
@@ -39,46 +38,9 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.props.account)
     return (
       <div>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-          <a href="/#" className="navbar-brand">
-            Navbar
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarNavDropdown"
-          >
-            {' '}
-            {/* 这里少了点 prop */}
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                {' '}
-                <a href="/#" className="nav-link">
-                  Link 1
-                </a>{' '}
-              </li>
-              <li className="nav-item">
-                {' '}
-                <a href="/#" className="nav-link">
-                  Link 2
-                </a>{' '}
-              </li>
-              <li className="nav-item">
-                {' '}
-                <a href="/#" className="nav-link">
-                  Link 3
-                </a>{' '}
-              </li>
-            </ul>
-          </div>
-        </nav>
+        <Navbar />
 
         <div className="content">
           <div className="vertical-split">
@@ -154,7 +116,7 @@ class App extends Component {
 
 function mapStateToProps(state) {
   return {
-    account: accountSelector(state),
+    // TODO: Fill me in ...
   }
 }
 
