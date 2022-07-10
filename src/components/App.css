@@ -161,3 +161,12 @@ td.order-book-order {
   width: 1px;
   background-color: #ffffff33;
 }
+
+/* 覆盖 bootstrap 样式 */
+.nav-tabs .nav-link.active {
+  background-color: transparent;
+}
+
+.price-chart {
+  overflow: hidden; /* 阻止滚动条的出现 */
+}

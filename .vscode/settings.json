@@ -22,6 +22,11 @@
     }
    },
   "terminal.integrated.defaultProfile.windows": "Bash",
-   "files.autoSave": "off"
+  "files.autoSave": "off",
+  "cSpell.words": [
+    "apexcharts",
+    "xaxis",
+    "yaxis"
+  ]
 }
 

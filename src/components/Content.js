@@ -6,6 +6,7 @@ import { loadAllOrders } from '../store/interactions'
 import Trades from './Trades'
 import OrderBook from './OrderBook'
 import MyTransactions from './MyTransactions'
+import PriceChart from './PriceChart'
 
 class Content extends Component {
   componentWillMount() {
@@ -43,7 +44,8 @@ class Content extends Component {
         <OrderBook />
 
         <div className="vertical-split">
-          <div className="card bg-dark text-white">
+          <PriceChart />
+          {/* <div className="card bg-dark text-white">
             <div className="card-header">Card Title</div>
             <div className="card-body">
               <p className="card-text">Some quick example text</p>
@@ -51,7 +53,7 @@ class Content extends Component {
                 Card link
               </a>
             </div>
-          </div>
+          </div> */}
 
           <MyTransactions />
         </div>
