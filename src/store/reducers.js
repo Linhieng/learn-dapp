@@ -61,6 +61,19 @@ function exchange(state = {}, action) {
           data: [...state.cancelledOrders.data, action.order],
         },
       }
+
+    case 'orderFilling':
+      return { ...state, orderFilling: true }
+    case 'orderFilled':
+      return {
+        ...state,
+        orderFilling: false,
+        FilledOrders: {
+          ...state.filledOrders,
+          data: [...state.filledOrders.data, action.order],
+        },
+      }
+
     case 'EXCHANGE_ETHER_BALANCE_LOADED':
       return { ...state, etherBalance: action.balance }
     case 'EXCHANGE_TOKEN_BALANCE_LOADED':

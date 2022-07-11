@@ -13,6 +13,8 @@ truffle migrate --reset
 truffle exec scripts/seed-exchange.js
 ```
 
+如果执行时出现错误, 试试新建一个 ganache, 并且重新 `truffle migrate --reset` 一下
+
 执行 scripts 中的脚本还有一个作用, 那就是在 react 中调用 web3 时, 可以有相关测试数据看到, 而不是所有数据都是 null
 
 ## 编译智能合约

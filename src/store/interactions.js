@@ -21,6 +21,10 @@ import {
   allOrdersLoaded,
   orderCancelling,
   orderCancelled,
+  //
+  orderFilling,
+  orderFilled,
+  //
   etherBalanceLoaded,
   tokenBalanceLoaded,
   exchangeEtherBalanceLoaded,
@@ -124,6 +128,22 @@ export const cancelOrder = (dispatch, exchange, order, account) => {
     })
 }
 
+// 完成一个订单
+export const fillOrder = (dispatch, exchange, order, account) => {
+  // 调用智能合约中的方法, 实现完成订单
+  exchange.methods
+    .fillOrder(order.id)
+    .send({ from: account })
+    .on('transactionHash', (hash) => {
+      // 将“订单正在完成”这个信息存入 store 中
+      dispatch(orderFilling())
+    })
+    .on('error', (error) => {
+      console.error(error)
+      window.alert('fill order wrong ')
+    })
+}
+
 // 订阅事件, 当事件发生变化时, 我们会受到该消息, 前面的 load
 export const subscribeToEvents = async (exchange, dispatch) => {
   exchange.events.Cancel({}, (error, event) => {
@@ -131,9 +151,9 @@ export const subscribeToEvents = async (exchange, dispatch) => {
     dispatch(orderCancelled(event.returnValues))
   })
 
-  // TODO: 填充(视频中缺失)
+  // (视频中缺失这部分内容, 但是有实现, 这个是视频中看到的一部分代码, 根据这一部分代码可以猜测出原本的实现逻辑)
   exchange.events.Trade({}, (error, event) => {
-    // dispatch(orderFilled(event.returnValues))
+    dispatch(orderFilled(event.returnValues))
   })
 
   exchange.events.Deposit({}, (error, event) => {

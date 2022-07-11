@@ -170,3 +170,12 @@ td.order-book-order {
 .price-chart {
   overflow: hidden; /* 阻止滚动条的出现 */
 }
+
+.table-hover:hover {
+  background: #030d25;
+  transition: 100ms ease;
+}
+
+.pointer {
+  cursor: pointer;
+}
