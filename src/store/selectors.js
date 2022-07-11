@@ -189,6 +189,12 @@ export const priceChartSelector = createSelector(filledOrders, (orders) => {
   }
 })
 
+const orderCancelling = (state) => get(state, 'exchange.orderCancelling', false)
+export const orderCancellingSelector = createSelector(
+  orderCancelling,
+  (status) => status
+)
+
 /* *****************工具函数***************** */
 /* *****************工具函数***************** */
 /* *****************工具函数***************** */

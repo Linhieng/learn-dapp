@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { exchangeSelector } from '../store/selectors'
-import { loadAllOrders } from '../store/interactions'
+import { loadAllOrders, subscribeToEvents } from '../store/interactions'
 
 import Trades from './Trades'
 import OrderBook from './OrderBook'
@@ -10,11 +10,14 @@ import PriceChart from './PriceChart'
 
 class Content extends Component {
   componentWillMount() {
-    this.loadBlockchainData(this.props.dispatch)
+    this.loadBlockchainData(this.props)
   }
 
-  async loadBlockchainData(dispatch) {
-    await loadAllOrders(this.props.exchange, dispatch)
+  async loadBlockchainData(props) {
+    const { dispatch, exchange } = props
+    await loadAllOrders(exchange, dispatch)
+    // 在 Content 中订阅时间, 如果将这段代码写在 MyTransaction.js 也是可以的.
+    await subscribeToEvents(exchange, dispatch)
   }
 
   render() {
@@ -67,7 +70,6 @@ class Content extends Component {
 function mapStateToProps(state) {
   return {
     exchange: exchangeSelector(state),
-    // TODO: Fill me in ...
   }
 }
 

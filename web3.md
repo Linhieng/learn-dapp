@@ -90,6 +90,34 @@ myContract.getPastEvents(event[, options][, callback])
 await exchange.getPastEvents('Cancel', { fromBlock: 0, toBlock: 'latest', })
 ```
 
+## methods.myMethod.send
+调用智能合约中的方法， [该函数有多种实现方式](https://web3js.readthedocs.io/en/v1.7.3/web3-eth-contract.html?highlight=methods.myMethod.send#methods-mymethod-send)
+
+```js
+myContract.methods.myMethod([param1[, param2[, ...]]]).send(options[, callback])
+
+exchange.methods.cancelOrder(order.id).send({from: account})
+  .on('transactionHash', hash => {
+    dispatch(orderCancelling())
+  })
+  .on('error', error => {
+    console.log(error)
+    window.alert('There was an error ! 取消订单失败')
+  })
+```
+
+## 订阅事件
+合约中有定义一些事件, 通过订阅中这是事件，当事件发生变化时，我们可以获取该消息.
+```js
+myContract.events.MyEvent([options][, callback])
+
+exchange.events.Cancel({}, (error, event) => {
+  dispatch(orderCancelled(event.returnValues))
+})
+```
+
+
+
 ## abis
 
 Tokens.js 中的 networks 是智能合约连接的网络

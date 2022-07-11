@@ -1,7 +1,8 @@
 export const chartOptions = {
   chart: {
     animations: { enabled: false },
-    toolbar: { show: false },
+    toolbar: { show: true },
+    type: 'candlestick',
     width: '100px',
   },
   tooltip: {
@@ -15,7 +16,7 @@ export const chartOptions = {
     },
     x: {
       show: true,
-      format: 'dd MM',
+      format: 'MM月dd日',
       formatter: undefined,
     },
     y: {
@@ -48,9 +49,15 @@ export const chartOptions = {
     },
   },
   yaxis: {
+    opposite: true,
+    logarithmic: true,
+    forceNiceScale: false,
+    tickAmount: 10,
+    position: 'top',
+    crosshairs: { show: false },
     labels: {
       show: true,
-      minWidth: 20,
+      minWidth: 0,
       maxWidth: 160,
       style: {
         colors: '#FFF',

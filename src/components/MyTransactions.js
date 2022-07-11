@@ -2,13 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Tab, Tabs } from 'react-bootstrap'
 import Spinner from './Spinner'
-
 import {
   myFilledOrderLoadedSelector,
   myFilledOrderSelector,
   myOpenOrdersLoadedSelector,
   myOpenOrdersSelector,
+  exchangeSelector,
+  accountSelector,
+  orderCancellingSelector,
 } from '../store/selectors'
+import { cancelOrder } from '../store/interactions'
 
 const showMyFilledOrders = (myFilledOrders) => (
   <tbody>
@@ -25,17 +28,29 @@ const showMyFilledOrders = (myFilledOrders) => (
   </tbody>
 )
 
-const showMyOpenOrders = (myOpenOrders) => (
-  <tbody>
-    {myOpenOrders.map((order) => (
-      <tr key={order.id}>
-        <td className={`text-${order.orderTypeClass}`}>{order.tokenAmount}</td>
-        <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
-        <td className="text-muted">×</td>
-      </tr>
-    ))}
-  </tbody>
-)
+const showMyOpenOrders = (props) => {
+  const { myOpenOrders, dispatch, exchange, account } = props
+  return (
+    <tbody>
+      {myOpenOrders.map((order) => (
+        <tr key={order.id}>
+          <td className={`text-${order.orderTypeClass}`}>
+            {order.tokenAmount}
+          </td>
+          <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
+          <td
+            className="text-muted cancel-order"
+            onClick={(e) => {
+              cancelOrder(dispatch, exchange, order, account)
+            }}
+          >
+            ×
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  )
+}
 
 class MyTransactions extends Component {
   render() {
@@ -70,8 +85,8 @@ class MyTransactions extends Component {
                     <th>Cancel</th>
                   </tr>
                 </thead>
-                {this.props.myOpenOrdersLoaded ? (
-                  showMyOpenOrders(this.props.myOpenOrders)
+                {this.props.showMyOpenOrders ? (
+                  showMyOpenOrders(this.props)
                 ) : (
                   <Spinner type="table" />
                 )}
@@ -85,11 +100,15 @@ class MyTransactions extends Component {
 }
 
 function mapStateToProps(state) {
+  const myOpenOrdersLoaded = myOpenOrdersLoadedSelector(state)
+  const orderCancelling = orderCancellingSelector(state)
   return {
     myFilledOrderLoaded: myFilledOrderLoadedSelector(state),
     myFilledOrder: myFilledOrderSelector(state),
-    myOpenOrdersLoaded: myOpenOrdersLoadedSelector(state),
+    showMyOpenOrders: myOpenOrdersLoaded && !orderCancelling,
     myOpenOrders: myOpenOrdersSelector(state),
+    exchange: exchangeSelector(state),
+    account: accountSelector(state),
   }
 }
 

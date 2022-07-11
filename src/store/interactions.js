@@ -19,6 +19,8 @@ import {
   cancelledOrdersLoaded,
   filledOrdersLoaded,
   allOrdersLoaded,
+  orderCancelling,
+  orderCancelled,
 } from './action'
 
 export const loadWeb3 = (dispatch) => {
@@ -98,4 +100,26 @@ export const loadAllOrders = async (exchange, dispatch) => {
   })
   const allOrders = orderStream.map((event) => event.returnValues)
   dispatch(allOrdersLoaded(allOrders))
+}
+
+// 取消一个订单
+export const cancelOrder = (dispatch, exchange, order, account) => {
+  exchange.methods
+    .cancelOrder(order.id)
+    .send({ from: account })
+    .on('transactionHash', (hash) => {
+      dispatch(orderCancelling())
+    })
+    .on('error', (error) => {
+      console.log(error)
+      window.alert('There was an error ! 取消订单失败')
+    })
+}
+
+// 订阅事件, 当事件发生变化时, 我们会受到该消息, 前面的 load
+export const subscribeToEvents = async (exchange, dispatch) => {
+  exchange.events.Cancel({}, (error, event) => {
+    // 对于返回的事件对象中, 我们只需要 returnValues 这部分内容
+    dispatch(orderCancelled(event.returnValues))
+  })
 }
