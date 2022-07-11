@@ -23,8 +23,8 @@ class App extends Component {
     const web3 = loadWeb3(dispatch)
     console.log('web3 对象', web3)
 
-    // const network_type = await web3.eth.net.getNetworkType()
-    // console.log('账户类型', network_type)
+    const network_type = await web3.eth.net.getNetworkType()
+    console.log('账户类型', network_type)
 
     window.ethereum &&
       (await window.ethereum.request({ method: 'eth_requestAccounts' }))
@@ -48,15 +48,14 @@ class App extends Component {
       )
     }
 
-    // const totalSupply = await token.methods.totalSupply().call()
-    // console.log('totalSupply ', totalSupply)
+    const totalSupply = await token.methods.totalSupply().call()
+    console.log('totalSupply ', totalSupply)
   }
 
   render() {
     return (
       <div>
         <Navbar />
-        {/* 动态加载 */}
         {this.props.contractsLoaded ? (
           <Content />
         ) : (

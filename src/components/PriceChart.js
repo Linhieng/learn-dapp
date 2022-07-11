@@ -22,7 +22,6 @@ const showPriceChart = (priceChart) => (
   <div className="price-chart">
     <div className="price">
       <h4>
-        {console.log('哈哈哈？？？？', priceChart)}
         DAPP / ETH &nbsp; {priceSymbol(priceChart.lastPriceChange)} &nbsp;{' '}
         {priceChart.lastPrice}
       </h4>

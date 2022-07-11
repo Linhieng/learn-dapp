@@ -253,17 +253,6 @@ class Balance extends Component {
 
 function mapStateToProps(state) {
   const balancesLoading = balancesLoadingSelector(state)
-  console.log('啊啊啊etherBalanceSelector', etherBalanceSelector(state))
-  console.log('啊啊啊tokenBalanceSelector', tokenBalanceSelector(state))
-  console.log(
-    '啊啊啊exchangeEtherBalanceSelector',
-    exchangeEtherBalanceSelector(state)
-  )
-  console.log(
-    '啊啊啊exchangeTokenBalanceSelector',
-    exchangeTokenBalanceSelector(state)
-  )
-  console.log('啊啊啊balancesLoading', balancesLoading)
   return {
     web3: web3Selector(state),
     exchange: exchangeSelector(state),
