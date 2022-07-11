@@ -7,6 +7,7 @@ import Trades from './Trades'
 import OrderBook from './OrderBook'
 import MyTransactions from './MyTransactions'
 import PriceChart from './PriceChart'
+import Balance from './Balance'
 
 class Content extends Component {
   componentWillMount() {
@@ -24,15 +25,7 @@ class Content extends Component {
     return (
       <div className="content">
         <div className="vertical-split">
-          <div className="card bg-dark text-white">
-            <div className="card-header">Card Title</div>
-            <div className="card-body">
-              <p className="card-text">Some quick example text</p>
-              <a href="/#" className="card-link">
-                Card link
-              </a>
-            </div>
-          </div>
+          <Balance />
           <div className="card bg-dark text-white">
             <div className="card-header">Card Title</div>
             <div className="card-body">
@@ -48,16 +41,6 @@ class Content extends Component {
 
         <div className="vertical-split">
           <PriceChart />
-          {/* <div className="card bg-dark text-white">
-            <div className="card-header">Card Title</div>
-            <div className="card-body">
-              <p className="card-text">Some quick example text</p>
-              <a href="/#" className="card-link">
-                Card link
-              </a>
-            </div>
-          </div> */}
-
           <MyTransactions />
         </div>
 

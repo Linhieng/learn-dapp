@@ -1,12 +1,27 @@
 import { groupBy, reject, get, maxBy, minBy } from 'lodash'
 import moment from 'moment'
 import { createSelector } from 'reselect'
-import { ETHER_ADDRESS, ether, tokens, RED, GREEN } from '../helpers'
+import {
+  formatBalance,
+  ETHER_ADDRESS,
+  ether,
+  tokens,
+  RED,
+  GREEN,
+} from '../helpers'
 
 // 不直接 state.web3.account 而是用 get 获取, 作用就是防止 web3 为不存在的情况
 const account = (state) => get(state, 'web3.account')
 // 直接返回 web3.account
 export const accountSelector = createSelector(account, (account) => account)
+
+// 同上, 获取 exchange
+const web3 = (state) => get(state, 'web3.connection', false)
+export const web3Selector = createSelector(web3, (web3) => web3)
+
+// 同上, 获取 exchange
+const token = (state) => get(state, 'token.contract', false)
+export const tokenSelector = createSelector(token, (token) => token)
 
 // 同上, 获取 exchange
 const exchange = (state) => get(state, 'exchange.contract', false)
@@ -195,6 +210,58 @@ export const orderCancellingSelector = createSelector(
   (status) => status
 )
 
+const balancesLoading = (state) => get(state, 'exchange.balancesLoading', true)
+export const balancesLoadingSelector = createSelector(
+  balancesLoading,
+  (status) => status
+)
+const etherBalance = (state) => get(state, 'web3.balance', true)
+export const etherBalanceSelector = createSelector(etherBalance, (status) =>
+  formatBalance(status)
+)
+const tokenBalance = (state) => get(state, 'token.balance', 0)
+export const tokenBalanceSelector = createSelector(tokenBalance, (balance) =>
+  formatBalance(balance)
+)
+const exchangeEtherBalance = (state) => get(state, 'exchange.etherBalance', 0)
+export const exchangeEtherBalanceSelector = createSelector(
+  exchangeEtherBalance,
+  (balance) => formatBalance(balance)
+)
+const exchangeTokenBalance = (state) => get(state, 'exchange.tokenBalance', 0)
+export const exchangeTokenBalanceSelector = createSelector(
+  exchangeTokenBalance,
+  (balance) => formatBalance(balance)
+)
+
+const etherDepositAmount = (state) =>
+  get(state, 'exchange.etherDepositAmount', null)
+export const etherDepositAmountSelector = createSelector(
+  etherDepositAmount,
+  (amount) => amount
+)
+const etherWithdrawAmount = (state) =>
+  get(state, 'exchange.etherWithdrawAmount', null)
+export const etherWithdrawAmountSelector = createSelector(
+  etherWithdrawAmount,
+  (amount) => amount
+)
+const tokenDepositAmount = (state) =>
+  get(state, 'exchange.tokenDepositAmount', null)
+export const tokenDepositAmountSelector = createSelector(
+  tokenDepositAmount,
+  (amount) => amount
+)
+const tokenWithdrawAmount = (state) =>
+  get(state, 'exchange.tokenWithdrawAmount', null)
+export const tokenWithdrawAmountSelector = createSelector(
+  tokenWithdrawAmount,
+  (amount) => amount
+)
+
+/* *****************工具函数***************** */
+/* *****************工具函数***************** */
+/* *****************工具函数***************** */
 /* *****************工具函数***************** */
 /* *****************工具函数***************** */
 /* *****************工具函数***************** */

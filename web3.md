@@ -116,6 +116,13 @@ exchange.events.Cancel({}, (error, event) => {
 })
 ```
 
+## 获取 balance
+
+```js
+web3.eth.getBalance(address [, defaultBlock] [, callback])
+
+```
+
 
 
 ## abis
