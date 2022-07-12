@@ -51,6 +51,8 @@ const showForm = (props) => {
     web3,
   } = props
 
+  loadBalances(dispatch, web3, exchange, token, account)
+
   return (
     <Tabs defaultActiveKey="deposit" className="bg-dark text-white">
       <Tab eventKey="deposit" title="Deposit" className="bg-dark">
