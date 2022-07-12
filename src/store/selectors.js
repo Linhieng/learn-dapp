@@ -212,10 +212,11 @@ export const orderCancellingSelector = createSelector(
 
 // 获取订单是否完成
 const orderFilling = (state) => get(state, 'exchange.orderFilling', false)
-export const orderFillingSelector = createSelector(orderFilling, (status) => {
-  console.log('是否会触发？？', status)
-  return status
-})
+
+export const orderFillingSelector = createSelector(
+  orderFilling,
+  (status) => status
+)
 
 const balancesLoading = (state) => get(state, 'exchange.balancesLoading', true)
 export const balancesLoadingSelector = createSelector(

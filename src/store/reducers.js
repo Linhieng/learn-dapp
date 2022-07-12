@@ -62,13 +62,13 @@ function exchange(state = {}, action) {
         },
       }
 
-    case 'orderFilling':
+    case 'ORDER_FILLING':
       return { ...state, orderFilling: true }
-    case 'orderFilled':
+    case 'ORDER_FILLED':
       return {
         ...state,
         orderFilling: false,
-        FilledOrders: {
+        filledOrders: {
           ...state.filledOrders,
           data: [...state.filledOrders.data, action.order],
         },
