@@ -152,6 +152,10 @@ td.order-book-order {
 
 .card-body {
   overflow: auto;
+  padding: 10px;
+}
+.card-body.hidden-overflow {
+  overflow: hidden;
 }
 .card-body::-webkit-scrollbar {
   width: 1px;
