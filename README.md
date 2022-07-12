@@ -6,7 +6,22 @@
 
 因为没有一个清晰的理解，所以笔记（markdown）文件也有点乱，里面的内容也不太清楚怎么组织。
 
+## 总结
+
+这个课程真的太多坑了，英语不是难事，重点是时代久远了（19年中旬的，现在22年中旬），技术更新太快了。
+有太多的东西都变了，导致遇到了很多 bug。还有的就是区块链相关的资料基本都是外语的。
+
+但总得来说，最终总算是跟完了整个项目，这是我成功部署后的账号, 地址是 `https://ropsten.etherscan.io/address/0xa18C047e08730044E79f696EBf68386b67BD81D2`。就当留个纪念。
+
+虽然最终跑完了，但是这个项目，总的来说，web3部分不难，后面更多的是 react 的知识点。还有的就是最终部署，搞了半个上午😣，还好最终成功了。
+
+这个项目不会再想更新了，原本中间就打算放弃了，毕竟我刚开始弄这个，是打算学习弄个溯源项目的。
+但是到了中间，发现这个教程，和溯源其实没啥关系，所以就没继续了。
+但是没想到，这个 github 项目居然会有人 star，于是就想着，算了，跟完视频吧。
+此时的代码全部都是能跑的（2022.7.12 12:50）
+
 ## 相关链接
 
-* [youtube 原版视频博主](https://www.youtube.com/c/DappUniversity/featured)
-* [视频-区块链开发训练营](https://www.bilibili.com/video/BV153411N7to)
+* [youtube 原版视频博主(大概)](https://www.youtube.com/c/DappUniversity/featured)
+* [作者新版项目代码](https://github.com/GlitchicaL/project-arcadia)
+* [b站搬运教程视频-区块链开发训练营](https://www.bilibili.com/video/BV153411N7to)

@@ -1,11 +1,10 @@
-const Token = artifacts.require("Token")
+const Token = artifacts.require('Token')
 const Exchange = artifacts.require('Exchange')
 
-module.exports = async function (deployer) {
-
+module.exports = async function(deployer) {
   const accounts = await web3.eth.getAccounts()
   const feeAccount = accounts[0]
-  const feePercent = 10
+  const feePercent = 1
 
   // 部署到区块链, 部署到 ganache
   await deployer.deploy(Token)

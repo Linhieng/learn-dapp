@@ -26,6 +26,9 @@
 require('babel-register')
 require('babel-polyfill')
 require('dotenv').config()
+const HDWalletProvider = require('truffle-hdwallet-provider')
+const privateKeys = process.env.PRIVATE_KEY || ''
+const infuraApiKey = process.env.INFURA_API_KEY
 
 module.exports = {
   /**
@@ -47,9 +50,21 @@ module.exports = {
     //
     development: {
       // 和 ganache 对应
-     host: "127.0.0.1",     // Localhost (default: none)
-     port: 7545,            // Standard Ethereum port (default: none)
-     network_id: "*",       // Any network (default: none)
+      host: '127.0.0.1', // Localhost (default: none)
+      port: 7545, // Standard Ethereum port (default: none)
+      network_id: '*', // Any network (default: none)
+    },
+    ropsten: {
+      networkCheckTimeout: 60000, // 超过 1min 则提示超时
+      provider: function() {
+        return new HDWalletProvider(
+          privateKeys, // Array of account private keys
+          `https://ropsten.infura.io/v3/${infuraApiKey}` // Url to an Ethereum Node
+        )
+      },
+      gas: 5000000,
+      gasPrice: 25000000000,
+      network_id: 3,
     },
     // Another network with more advanced options...
     // advanced: {
@@ -88,16 +103,16 @@ module.exports = {
   contracts_build_directory: './src/abis/',
   compilers: {
     solc: {
-      version: "0.5.0",      // Fetch exact version from solc-bin (default: truffle's version)
+      version: '0.5.0', // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       optimizer: {
         enabled: false,
-        runs: 200
+        runs: 200,
       },
       //  evmVersion: "byzantium"
       // }
-    }
+    },
   },
 
   // Truffle DB is currently disabled by default; to enable it, change enabled:
@@ -111,13 +126,13 @@ module.exports = {
   // $ truffle migrate --reset --compile-all
   //
   // db: {
-    // enabled: false,
-    // host: "127.0.0.1",
-    // adapter: {
-    //   name: "sqlite",
-    //   settings: {
-    //     directory: ".db"
-    //   }
-    // }
+  // enabled: false,
+  // host: "127.0.0.1",
+  // adapter: {
+  //   name: "sqlite",
+  //   settings: {
+  //     directory: ".db"
+  //   }
   // }
-};
+  // }
+}
